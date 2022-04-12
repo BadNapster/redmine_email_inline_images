@@ -1,5 +1,6 @@
 require 'redmine'
-require 'mail_handler_patch'
+# require 'mail_handler_patch'
+require_relative 'lib/mail_handler_patch'
 
 # Add module to MailHandler class if not added before
 unless MailHandler.include? RedmineEmailInlineImages::MailHandlerPatch

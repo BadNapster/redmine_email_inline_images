@@ -22,6 +22,9 @@ module RedmineEmailInlineImages
       def initialize
         @images = {}
         case Setting.text_formatting
+        when 'common_mark'
+          @strOpen = "![]("
+          @strClose = ")"
         when 'markdown'
           @strOpen = "![]("
           @strClose = ")"

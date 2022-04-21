@@ -1,5 +1,4 @@
 module RedmineEmailInlineImages
-
   module MailHandlerPatch
 
     def self.included(base) # :nodoc:
@@ -35,11 +34,8 @@ module RedmineEmailInlineImages
         end
       end
 
-      # Overrides the email_parts_to_text method to
-      # include inline images from an email for
-      # an issue created by an email request
-      def email_parts_to_text_with_inline_images(parts)
-  
+      # Find all images inside message
+      def email_parts_to_text_with_inline_images(parts)  
         email.all_parts.each do |part|
             if part['Content-ID']
                 if part['Content-ID'].respond_to?(:element)
@@ -52,33 +48,15 @@ module RedmineEmailInlineImages
             end
         end
 
-        parts.reject! do |part|
-          part.attachment?
-        end
-    
-        parts.map do |part|
-          body_charset = Mail::RubyVer.respond_to?(:pick_encoding) ?
-                          Mail::RubyVer.pick_encoding(part.charset).to_s : part.charset
-    
-          body = Redmine::CodesetUtil.to_utf8(part.body.decoded, body_charset)
-
-          # replace html images with text bang notation
-          # and add them to Hash
-          body.scan(/(\[(cid:.*?)\])/).each do |match|
-            tmp_body = body.gsub(match[0], "#{@strOpen}#{@images[match[1]]}#{@strClose}")
-            body = tmp_body
-          end
-
-          # convert html parts to text
-          part.mime_type == 'text/html' ? self.class.html_body_to_text(body) : self.class.plain_text_body_to_text(body)
-        end.join("\r\n")
-
+        
+        email_parts_to_text_default(parts)
       end
 
       # update issue inline images with full path
       # to prevent overlapping names when replies come in
       def add_attachments_with_inline_images(obj)
         add_attachments_default(obj)
+        obj.reload
 
         # route/path to attachments
         # need to get this from redmine installation
@@ -86,19 +64,18 @@ module RedmineEmailInlineImages
 
         obj.attachments.each do |att|
           if @images.has_value?(att.filename)
-            str_r = Regexp.escape("#{@strOpen}#{att.filename}#{@strClose}")
+            str_r = Regexp.escape("[image: #{att.filename}]")
             regex = Regexp.new(str_r)
             obj.description.scan(regex).each do |match|
-              tmp_desc = obj.description.gsub(match, "#{@strOpen}#{path}/#{att.id}/#{att.filename}#{@strClose}")
+              # tmp_desc = obj.description.gsub(match, "#{@strOpen}#{path}/#{att.id}/#{att.filename}#{@strClose}")
+              tmp_desc = obj.description.gsub(match, "#{@strOpen}#{att.filename}#{@strClose}")
               obj.description = tmp_desc
             end
           end
         end
 
         obj.save!
-      end
-
-      
+      end      
     end # module InstanceMethods
   end # module MailHandlerPatch
 end # module RedmineEmailInlineImages

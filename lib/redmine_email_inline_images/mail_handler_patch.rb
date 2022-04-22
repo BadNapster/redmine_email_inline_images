@@ -67,7 +67,8 @@ module RedmineEmailInlineImages
 
         obj.attachments.each do |att|
           if @images.has_value?(att.filename)
-            str_r = Regexp.escape("[image: #{att.filename}]")
+            str_r = Regexp.escape(att.filename)
+            str_r = "\\[(?:image|cid).?:.?#{str_r}(?:[@A-Z\\d\\.]*)\\]"
             regex = Regexp.new(str_r)
             obj.description.scan(regex).each do |match|
               # tmp_desc = obj.description.gsub(match, "#{@strOpen}#{path}/#{att.id}/#{att.filename}#{@strClose}")

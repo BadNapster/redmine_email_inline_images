@@ -1,14 +1,11 @@
 # Redmine email inline images plugin
 
 Handle inline images on incoming emails, so that they are included inline in the issue description.
+Based on the plugin from GitHub: http://github.com/credativUK/redmine_email_inline_images
 
 ## Features
 
 * Issues created with email requests will include inline images from the email in the issue description.
-
-## Getting the plugin
-
-A copy of the plugin can be downloaded from GitHub: http://github.com/credativUK/redmine_email_inline_images
 
 ## Installation
 
@@ -32,7 +29,7 @@ Further information about plugin installation can be found at: http://www.redmin
 
 ## Compatibility
 
-The latest version of this plugin is only tested with Redmine 2.3.x.
+The latest version of this plugin is only tested with Redmine 5.0.x.
 
 
 ## License
@@ -41,5 +38,5 @@ This plugin is licensed under the GNU GPLv2 license. See LICENSE-file for detail
 
 ## Copyright
 
-Copyright (c) 2013 credativ Ltd.
+Copyright (c) 2022 Napster.
 

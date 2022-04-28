@@ -69,15 +69,17 @@ module RedmineEmailInlineImages
           obj.reload
           last_journal_id = obj.last_journal_id
           if last_journal_id.nil?
-            description = obj.description            
+            description = obj.description 
+            attachments = obj.attachments
             # Rails.logger.info "InlineMailHandler: no last_journal find"
           else
             last_journal = Journal.find(last_journal_id) 
             # Rails.logger.info "InlineMailHandler: last_journal ##{last_journal.id} find"
             description = last_journal.notes
+            attachments = last_journal.attachments
           end                  
                    
-          obj.attachments.each do |att|
+          attachments.each do |att|
             str_r = Regexp.escape(att.filename)
             str_r = "\\[(?:image|cid).?:.?#{str_r}(?:[@A-Z\\d\\.]*)\\]"
             regex = Regexp.new(str_r)

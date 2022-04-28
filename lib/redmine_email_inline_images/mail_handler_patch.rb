@@ -60,7 +60,7 @@ module RedmineEmailInlineImages
       def add_attachments_with_inline_images(obj)
         add_attachments_default(obj)
 
-        if obj.is_a?(Issue)
+        if obj.is_a?(Issue)  
           # route/path to attachments
           # need to get this from redmine installation
           path = "/attachments/download"
@@ -74,7 +74,8 @@ module RedmineEmailInlineImages
             last_journal = Journal.find(last_journal_id) 
             description = last_journal.notes
             attachments = last_journal.attachments
-          end                  
+          end  
+          # Rails.logger.info "InlineMailHandler: description before ##{description}"
                    
           attachments.each do |att|
             str_r = Regexp.escape(att.filename)
@@ -86,6 +87,7 @@ module RedmineEmailInlineImages
                 # tmp_desc = description.gsub(match, "#{@strOpen}#{att.filename}#{@strClose}")
                 description = tmp_desc
               end        
+              # Rails.logger.info "InlineMailHandler: description after ##{description}"
             end
           end
           

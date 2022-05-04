@@ -48,6 +48,7 @@ module RedmineEmailInlineImages
                 end
                 image = part.header['Content-Type'].parameters['name']
                 @images["cid:#{content_id}"] = image
+                # Rails.logger.info "InlineMailHandler: images ##{image}"
             end
         end
 
@@ -79,7 +80,7 @@ module RedmineEmailInlineImages
                    
           attachments.each do |att|
             str_r = Regexp.escape(att.filename)
-            str_r = "\\[(?:image|cid).?:.?#{str_r}(?:[@A-Z\\d\\.]*)\\]"
+            str_r = "\\[(?:image|cid)?.?:?.?#{str_r}(?:[@A-Z\\d\\.]*)\\]"
             regex = Regexp.new(str_r)
             if @images.has_value?(att.filename)              
               description.scan(regex).each do |match|
